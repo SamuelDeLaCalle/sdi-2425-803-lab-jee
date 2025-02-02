@@ -24,7 +24,7 @@ public class GreetingServlet extends HttpServlet {
         }
         out.println("</BODY></HTML>");
         try {
-            Thread.sleep(15000);
+            Thread.sleep(150);
         } catch (InterruptedException e) {
             out.println("Se ha producido un error inesperado");
         }
