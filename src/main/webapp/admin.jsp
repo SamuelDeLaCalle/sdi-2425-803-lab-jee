@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
          pageEncoding="utf-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ page language="java" import="com.uniovi.sdi.*" %>
+
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
@@ -17,26 +19,18 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-<%
-    String usuario = (String) request.getSession().getAttribute("user");
-    System.out.println("Usuario en sesión: " + usuario);
-    if (usuario == null || usuario.equals("admin") == false) {
-// No hay usuario o no es admin
-        response.sendRedirect("login.jsp");
-    }
-%>
-<%
-    if (request.getParameter("name") != null &&
-            request.getParameter("image") != null &&
-            request.getParameter("price") != null) {
-        String name = request.getParameter("name");
-        String image = request.getParameter("image");
-        float price = Float.parseFloat(request.getParameter("price"));
-        Product product = new Product(name, image, price);
-        new ProductsService().setNewProduct(product);
-        request.getRequestDispatcher("index.jsp").forward(request, response);
-    }
-%>
+<c:if test="${sessionScope.user != 'admin'}">
+    <c:redirect url="/login.jsp"/>
+</c:if>
+
+<jsp:useBean id="product" class="com.uniovi.sdi.Product"/>
+<jsp:setProperty name="product" property="*"/>
+
+<c:if test="${product.name != null}">
+    <jsp:useBean id="productsService" class="com.uniovi.sdi.ProductsService"/>
+    <jsp:setProperty name="productsService" property="newProduct" value="${product}"/>
+    <c:redirect url="/index.jsp"/>
+</c:if>
 <!-- Contenido -->
 <div class="container" id="contenedor-principal">
     <h2>Agregar producto a la tienda</h2>
