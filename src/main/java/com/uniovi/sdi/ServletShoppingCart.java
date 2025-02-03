@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 @WebServlet(name = "ServletShoppingCart", value = "/AddToShoppingCart")
 public class ServletShoppingCart extends HttpServlet{
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws
             ServletException, IOException {
@@ -24,14 +25,9 @@ public class ServletShoppingCart extends HttpServlet{
         if (product != null) {
             addToShoppingCart(cart, product);
         }
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-        out.println("<HTML>");
-        out.println("<HEAD><TITLE>Tienda SDI: Cesta de la compra</TITLE></HEAD>");
-        out.println("<BODY>");
-        out.println(shoppingCartToHtml(cart) + "<br>");
-        out.println("<a href=\"index.jsp\">Volver</a></BODY></HTML>");
+// Retornar la vista con parámetro "selectedItems"
+        request.setAttribute("selectedItems", cart);
+        getServletContext().getRequestDispatcher("/cart.jsp").forward(request, response);
     }
 
     private void addToShoppingCart(Map<String, Integer> cart, String productKey) {
